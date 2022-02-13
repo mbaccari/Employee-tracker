@@ -118,7 +118,7 @@ addEmployee = () => {
           const fn = answers.fn;
           const ln = answers.ln;
           const role = answers.role;
-          db.query(`SELECT * FROM employees`, (err, res) => {
+          db.query(`SELECT * FROM employees`, (err, data) => {
               const employees = data.map(({id, first_name, last_name}) => ({name: first_name + ' ' + last_name, value: id}))
 
               inquirer.prompt(
