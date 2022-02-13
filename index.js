@@ -96,13 +96,12 @@ viewEmployees = () => {
 
 addEmployee = () => {
 
-    db.query(`SELECT roles.title FROM roles`, (err, data) => {
+    db.query(`SELECT * FROM roles`, (err, data) => {
         if (err) throw err;
 
-        const roles = data.map(({id, title}) => ({value: id, name:title}))
-    
+        const roles = data.map(({id, title}) => ({name:title, value: id}))
 
-
+        console.log(roles)
 
     inquirer.prompt([
         {message: "What is the employee's first name?",
@@ -116,16 +115,29 @@ addEmployee = () => {
         type: 'list',
         choices: roles}
       ]).then((answers) => {
-          console.log(answers.role)
-          db.query(`INSERT INTO employees SET ?`,
-          {first_name: answers.fn,
-            last_name: answers.ln,
-            role_id: answers.role,
-            manager_id: answers.managerId},
-            (err, res) => {
-                if (err) throw err;
-                init()
-            })
+          const fn = answers.fn;
+          const ln = answers.ln;
+          const role = answers.role;
+          db.query(`SELECT * FROM employees`, (err, res) => {
+              const employees = data.map(({id, first_name, last_name}) => ({name: first_name + ' ' + last_name, value: id}))
+
+              inquirer.prompt(
+                {message: "Who is this employee's manager",
+                name:'manager',
+                type: 'list',
+                choices: employees}
+              ).then((answers) => {
+                db.query(`INSERT INTO employees SET ?`,
+                    {first_name: fn,
+                    last_name: ln,
+                    role_id: role,
+                    manager_id: answers.manager},
+                (err, res) => {
+                    if (err) throw err;
+                    init()
+                })
+              })
+          })
       })
 })
     
