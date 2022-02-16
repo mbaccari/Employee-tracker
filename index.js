@@ -1,8 +1,6 @@
 const inquirer = require('inquirer');
 const mysql2 = require('mysql2');
 
-// Functions
-const addRole = require('./methods/addRole');
 
 const db = mysql2.createConnection(
     {
@@ -23,7 +21,6 @@ const init = () => {
         name: 'mc',
         choices: ["View All Employees",
         "Add Employee",
-        "Update Employee Role",
         "View All Roles",
         "Add Role",
         "View All Departments",
@@ -33,8 +30,6 @@ const init = () => {
         console.log(answer)
         if (answer.mc === 'Add Employee'){
             addEmployee()}
-        else if (answer.mc === 'Update Employee Role'){
-            updateEmployee()}
         else if (answer.mc === 'View All Roles'){
             viewRoles()}
         else if (answer.mc === 'View All Employees'){
@@ -52,8 +47,8 @@ const init = () => {
 
 // viewDepartments function
 
-viewDepartments = () => {
-    console.log('Showing all departments...\n');
+viewRoles = () => {
+    console.log('Showing all roles\n');
     const sql = `SELECT * FROM roles`; 
   
     db.query(sql, (err, rows) => {
@@ -66,8 +61,8 @@ viewDepartments = () => {
 
 //   viewRoles function
 
-  viewRoles = () => {
-    console.log('Showing all departments...\n');
+  viewDepartments = () => {
+    console.log('Showing all departments\n');
     const sql = `SELECT * FROM departments`; 
   
     db.query(sql, (err, rows) => {
@@ -81,7 +76,7 @@ viewDepartments = () => {
 // viewEmployees function
   
 viewEmployees = () => {
-    console.log('Showing all employees...\n');
+    console.log('Showing all employees\n');
     const sql = `SELECT * FROM employees`; 
   
     db.query(sql, (err, rows) => {
@@ -139,9 +134,64 @@ addEmployee = () => {
               })
           })
       })
-})
-    
+    })
+};
+
+
+// addDepartment function
+
+const addDepartment = () => {
+    inquirer.prompt(
+        {message: 'What department do you want to add?',
+        name:'dept',
+        type:'input'})
+    .then((answer) => {
+        db.query(`INSERT INTO departments SET ?`,
+            {name: answer.dept}, (err, res) => {
+        if (err) throw err;
+        init()
+    })
+        })
 }
 
+
+
+// addRole function
+
+const addRole = () => {
+    db.query('SELECT * FROM departments',(err, data) => {
+        if (err) throw err;
+
+        const depts = data.map(({id, name}) => ({name:name, value: id}));
+
+        inquirer.prompt([
+            {message: "What is the new role?",
+            name: 'role',
+            type: 'input'},
+            {message: "What is this role's salary?",
+            name: 'salary',
+            type: 'input'},
+            {message: "What department does this role belong to?",
+            name: 'dept',
+            type: 'list',
+            choices: depts}
+        ]).then((answers) => {
+            db.query(`INSERT INTO roles SET ?`,
+                {title: answers.role,
+                salary: answers.salary,
+                department_id: answers.dept},
+            (err, res) => {
+                if (err) throw err;
+                init()
+            })
+          })
+    });
+};
+
+console.log("***********************************")
+console.log("*                                 *")
+console.log("*        EMPLOYEE TRACKER         *")
+console.log("*                                 *")
+console.log("***********************************")
 
 init()
