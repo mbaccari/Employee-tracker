@@ -50,4 +50,4 @@ https://choosealicense.com/licenses/mit
 
 ## Walkthrough
 
-![demo](demo(2).gif)
+![demo](demo (2).gif)
