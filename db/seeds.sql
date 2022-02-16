@@ -14,12 +14,12 @@ VALUES('Sales Leader', 74894.47, 1),
 ('Secretary', 49583.55, 3);
 
 INSERT INTO employees(first_name, last_name, role_id, manager_id)
-VALUES('Karl', 'Strogonakis', 1, NULL),
-('Vazas', 'Theronath', 2, 1),
-('Bily', 'Bhambi', 2, 1),
-('Ilias', 'Cirillo', 3, NULL),
-('Atlas', 'Omni', 4, 4),
-('Samra', 'Till', 4, 4),
-('Ellsworth', 'Wildingham', 5, NULL),
-('Titus', 'Andromedon', 6, 7),
-('Kimmy', 'Schmitt', 6, 7);
+VALUES('Peter', 'Parker', 1, NULL),
+('Larry', 'Byrd', 2, 1),
+('Eddie', 'Van Halen', 2, 1),
+('Rivers', 'Cuomo', 3, NULL),
+('James', 'Brown', 4, 4),
+('Michael', 'Jackson', 4, 4),
+('Kurt', 'Cobain', 5, NULL),
+('Billy', 'Corgan', 6, 7),
+('Michael', 'Jones', 6, 7);
